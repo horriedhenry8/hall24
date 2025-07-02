@@ -69,7 +69,7 @@ const CreateBank = ({handleClose,state,setState}) => {
             <input
               type="file"
               id="logo"
-              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-green-500 focus:ring-green-500"
+              className="mt-1 block w-full rounded-md border-gray-300 shadow-sm focus:border-teal-800 focus:ring-teal-800"
               {...register("logo")}
             />
           </div>
@@ -91,7 +91,7 @@ const CreateBank = ({handleClose,state,setState}) => {
 
           <button
             type="submit"
-            className="w-full rounded-md bg-green-600 py-2 px-4 text-white hover:bg-green-700 focus:outline-none focus:ring-2 focus:ring-green-500 focus:ring-offset-2"
+            className="w-full rounded-md bg-teal-800 py-2 px-4 text-white hover:bg-teal-700 focus:outline-none focus:ring-2 focus:ring-teal-800 focus:ring-offset-2"
           >
             Submit
           </button>

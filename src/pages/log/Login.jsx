@@ -6,7 +6,7 @@ import { loginSchema } from "../../schema/zod";
 
 const baseurl = import.meta.env.VITE_APP_BASE_URL;
 
-const Login = () => {
+const Login = ({setAuth}) => {
   const { register, handleSubmit,formState: { errors }} = useForm({resolver: zodResolver(loginSchema)});
 
   const submit = async (data) => {
@@ -30,7 +30,8 @@ const Login = () => {
         data.data
           ? (console.log(data),
             localStorage.setItem("token", data.data.token),
-            toast.success(data.message))
+            toast.success(data.message),
+            setAuth(true))
           : toast.error(data.message);
       })
       .catch((error) => toast.error(error));
@@ -56,7 +57,7 @@ const Login = () => {
               id="email"
               name="email"
               {...register("email")}
-              className="mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent"
               placeholder="Enter your email"
             />
           </div>
@@ -73,7 +74,7 @@ const Login = () => {
               id="password"
               name="password"
               {...register("password")}
-              className="mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-blue-500 focus:border-transparent"
+              className="mt-1 w-full px-3 py-2 border rounded-lg focus:outline-none focus:ring-2 focus:ring-teal-700 focus:border-transparent"
               placeholder="Enter your password"
             />
           </div>
@@ -84,17 +85,17 @@ const Login = () => {
                 type="checkbox"
                 name="remember"
                 {...register("remember")}
-                className="mr-2 rounded"
+                className="mr-2 rounded accent-teal-800"
               />
               Remember Me
             </label>
-            <a href="#" className="text-blue-600 text-sm hover:underline">
+            <a href="#" className="text-teal-700 text-sm hover:underline">
               Forgot Password?
             </a>
           </div>
           <button
             type="submit"
-            className="w-full bg-blue-600 text-white py-2 rounded-lg hover:bg-blue-700 transition"
+            className="w-full bg-teal-800 text-white py-2 rounded-lg hover:bg-teal-700 transition cursor-pointer"
           >
             Login
           </button>

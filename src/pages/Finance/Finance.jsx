@@ -1,42 +1,51 @@
-import { NavLink, Outlet } from "react-router-dom";
+import { useState } from "react";
+import Bank from "./bank/bank/Bank";
+import BankAcc from "./bank/bankAcc/BankAcc";
+import CashAcc from "./bank/cashAcc/CashAcc";
 
 const Finance = () => {
+  const [activeTab, setActiveTab] = useState("bank");
+
   return (
     <div className="py-4 px-8 mx-auto">
-      <nav className=" grid grid-rows-1 grid-cols-3 justify-items-stretch text-center gap-2.5 p-1 bg-gray-200">
-        <NavLink
-          to="/finance/bank"
-          className={({ isActive }) =>
-            ` rounded ${
-              isActive ? "bg-green-500 text-white" : "bg-gray-200 text-gray-600"
-            }`
-          }
+      <nav className="grid grid-rows-1 grid-cols-3 justify-items-stretch text-center cursor-pointer gap-2.5 p-1 bg-gray-200">
+        <button
+          onClick={() => setActiveTab("bank")}
+          className={`rounded ${
+            activeTab === "bank"
+              ? "bg-teal-700 text-white"
+              : "bg-gray-200 text-gray-600  hover:bg-teal-100"
+          }`}
         >
-          bank
-        </NavLink>
-        <NavLink
-          to="/finance/bankacc"
-          className={({ isActive }) =>
-            ` rounded ${
-              isActive ? "bg-green-500 text-white" : "bg-gray-200 text-gray-600"
-            }`
-          }
+          Bank
+        </button>
+        <button
+          onClick={() => setActiveTab("bankacc")}
+          className={`rounded ${
+            activeTab === "bankacc"
+              ? "bg-teal-700 text-white"
+              : "bg-gray-200 text-gray-600  hover:bg-teal-100"
+          }`}
         >
-          bank account
-        </NavLink>
-        <NavLink
-          to="/finance/cashaa"
-          className={({ isActive }) =>
-            ` rounded ${
-              isActive ? "bg-green-500 text-white" : "bg-gray-200 text-gray-600"
-            }`
-          }
+          Bank Account
+        </button>
+        <button
+          onClick={() => setActiveTab("cashacc")}
+          className={`rounded ${
+            activeTab === "cashacc"
+              ? "bg-teal-700 text-white"
+              : "bg-gray-200 text-gray-600  hover:bg-teal-100"
+          }`}
         >
-          cash account
-        </NavLink>
+          Cash Account
+        </button>
       </nav>
 
-      <Outlet />
+      <div className="mt-4">
+        {activeTab === "bank" && <Bank />}
+        {activeTab === "bankacc" && <BankAcc />}
+        {activeTab === "cashacc" && <CashAcc />}
+      </div>
     </div>
   );
 };

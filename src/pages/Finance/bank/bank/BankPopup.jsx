@@ -2,17 +2,28 @@ import { useEffect, useState } from "react";
 import { useForm } from "react-hook-form";
 import Close from "../../../../components/icons/Close";
 import toast from "react-hot-toast";
+import DeleteModal from "../../../../components/ui/DeleteModal";
+import Modal from "../../../../components/ui/Modal";
 
 const BankPopup = ({ showBank, handleClose, data ,state,setState}) => {
-
- 
-
-
-  const [dataa, setData] = useState({});
   const baseurl = import.meta.env.VITE_APP_BASE_URL;
 
+  const [loading, setLoading] = useState(false);
+
+  const [dataa, setData] = useState({});
+
+  const[deleteModal,setDeleteModal] = useState(false);
+      const handleDeleteModal = () => {
+          setDeleteModal(!deleteModal);
+      }
+      const handleDelete = () => {
+          setDeleteModal(false);
+          deletFn();
+      }
+
   useEffect(() => {
-    if (data?.id) {
+    setLoading(true);
+    if (showBank) {
       fetch(baseurl + "banks/" + data.id, {
         method: "GET",
         headers: {
@@ -30,16 +41,18 @@ const BankPopup = ({ showBank, handleClose, data ,state,setState}) => {
 
           console.log(a.data);
           console.log(dataa);
+          setLoading(false);
           
         })
-        .catch((error) => console.log(error));
+        .catch((error) => {toast.error(error.message || "Error fetching data");setLoading(false);});
     }
-  }, [data]);
+  }, [data,showBank]);
   const form = useForm({defaultValues: {
     name: "",
     status: "active",
     logo: null,}});
   const {
+    getValues,
     setValue,
     register,
     handleSubmit,
@@ -126,6 +139,36 @@ const BankPopup = ({ showBank, handleClose, data ,state,setState}) => {
           <Close/>
         </button>
         <div className="mb-4 text-center">
+          {loading && (
+            <div className="flex justify-center items-center py-4">
+              <svg
+                className="animate-ping h-10 w-10 text-teal-800"
+                viewBox="0 0 24 24"
+                xmlns="http://www.w3.org/2000/svg"
+                fill="none"
+                stroke="currentColor"
+                strokeWidth="2"
+                strokeLinecap="round"
+                strokeLinejoin="round"
+              >
+                <circle
+                  className="opacity-25"
+                  cx="12"
+                  cy="12"
+                  r="10"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></circle>
+                <path
+                  className="opacity-75"
+                  d="M4 12a8 8 0 1 1 16 0 8 8 0 0 1-16 0"
+                  stroke="currentColor"
+                  strokeWidth="4"
+                ></path>
+              </svg>
+            </div>
+          )}
+          
           <h2 className="text-2xl font-semibold text-gray-800">{dataa.name}</h2>
           {dataa.logo && (
             <img
@@ -138,12 +181,15 @@ const BankPopup = ({ showBank, handleClose, data ,state,setState}) => {
         </div>
         <div className="flex justify-center mb-6">
           <button
-            onClick={deletFn}
+            onClick={handleDeleteModal}
             className="bg-red-500 hover:bg-red-600 text-white py-2 px-4 rounded focus:outline-none"
           >
             Delete
           </button>
         </div>
+        <Modal trigger={deleteModal} triggerFn={handleDeleteModal} title={`Delete Bank Account ${getValues("name")}`} description="Are you sure you want to delete this cash account?">
+              <DeleteModal deleteFn={handleDelete} cancelFn={handleDeleteModal} />
+          </Modal>
         <form onSubmit={handleSubmit(updateFn)}>
           <div className="mb-4">
             <label
@@ -154,7 +200,7 @@ const BankPopup = ({ showBank, handleClose, data ,state,setState}) => {
             </label>
             <input
               id="bankName"
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-0 focus:ring-green-500"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-0 focus:ring-teal-800"
               {...register("name")}
             />
             
@@ -170,7 +216,7 @@ const BankPopup = ({ showBank, handleClose, data ,state,setState}) => {
             <input
               type="file"
               id="logo"
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-0 focus:ring-green-500"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-0 focus:ring-teal-800"
               {...register("logo")}
             />
           </div>
@@ -184,7 +230,7 @@ const BankPopup = ({ showBank, handleClose, data ,state,setState}) => {
             </label>
             <select
               id="status"
-              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-0 focus:ring-green-500"
+              className="w-full rounded-md border border-gray-300 px-3 py-2 focus:outline-none focus:ring-0 focus:ring-teal-800"
               {...register("status")}
               defaultValue={dataa.status || "active"}
             >
@@ -195,7 +241,7 @@ const BankPopup = ({ showBank, handleClose, data ,state,setState}) => {
 
           <button
             type="submit"
-            className="w-full bg-green-500 hover:bg-green-700 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-0 "
+            className="w-full bg-teal-800 hover:bg-teal-700 text-white py-2 px-4 rounded-md focus:outline-none focus:ring-0 "
           >
             Submit
           </button>

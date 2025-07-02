@@ -1,13 +1,17 @@
 import { Outlet, RouterProvider } from 'react-router-dom'
 import './App.css'
-import routes from './routes'
+import Nav from './pages/Nav'
 import { Toaster } from 'react-hot-toast'
+import useGlobalShortcut from './hook/useGlobalShortcut'
+
 
 function App() {
 
+  useGlobalShortcut();
   return (
     <div>
-      <RouterProvider router={routes} />
+      <Nav />
+      <Outlet />
       <Toaster position="top-left" />
     </div>
   )

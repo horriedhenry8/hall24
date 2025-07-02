@@ -1,8 +1,7 @@
-import { Children } from "react";
 
 const CreateBtn = ({children,onClick}) => {
     return (
-        <button className="bg-green-500 rounded text-white p-2 my-2 " onClick={onClick} id="btn" >
+        <button className="bg-teal-800 hover:bg-teal-700 rounded text-white p-2 my-2 cursor-pointer" onClick={onClick}  >
             {children}
         </button>
     );
