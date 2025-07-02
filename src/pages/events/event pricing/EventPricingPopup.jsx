@@ -47,6 +47,7 @@ const EventPricingPopup = ({ state, setState, showPopup, handleClose, id }) => {
 
         if (!res.ok) throw new Error(result.message);
 
+        setData(result.data);
         reset({
           hall_rent_category_id: result.data.hall_rent_category_id || "",
           event_type_id: result.data.event_type_id || "",
@@ -67,7 +68,7 @@ const EventPricingPopup = ({ state, setState, showPopup, handleClose, id }) => {
   }, [fetchEventPricing, showPopup]);
 
   const hallRentCatId = form.watch("hall_rent_category_id");
-  const hallRentCatFn = async () => {
+  const hallRentCatFn = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(baseurl + "hall-rent-categories/dropdown", {
@@ -91,8 +92,8 @@ const EventPricingPopup = ({ state, setState, showPopup, handleClose, id }) => {
     } finally {
       setLoading(false);
     }
-  };
-  const hallRentFn = async () => {
+  }, [showPopup]);
+  const hallRentFn = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(
@@ -118,8 +119,8 @@ const EventPricingPopup = ({ state, setState, showPopup, handleClose, id }) => {
     } finally {
       setLoading(false);
     }
-  };
-  const eventTypeFn = async () => {
+  }, [showPopup, hallRentCatId]);
+  const eventTypeFn = useCallback(async () => {
     setLoading(true);
     try {
       const response = await fetch(baseurl + "event-types/dropdown", {
@@ -142,15 +143,15 @@ const EventPricingPopup = ({ state, setState, showPopup, handleClose, id }) => {
     } finally {
       setLoading(false);
     }
-  };
-  // useEffect(() => {
-  //   hallRentCatFn();
-  //   eventTypeFn();
-  // }, []);
+  }, [showPopup]);
+  useEffect(() => {
+    hallRentCatFn();
+    eventTypeFn();
+  }, []);
 
-  // useEffect(() => {
-  //   hallRentFn();
-  // }, [hallRentCatId]);
+  useEffect(() => {
+    hallRentFn();
+  }, [hallRentCatId]);
 
   const submitFn = async (data) => {
     const url = `${baseurl}event-pricings/${id}`;
@@ -203,7 +204,7 @@ const EventPricingPopup = ({ state, setState, showPopup, handleClose, id }) => {
     <Modal
       triggerFn={handleClose}
       trigger={showPopup}
-      title={"data.data.event_type.name"}
+      title={data ? data.event_type.name : "Event Type"}
       description={"penaldo"}
     >
       <div className="p-4">
@@ -226,6 +227,25 @@ const EventPricingPopup = ({ state, setState, showPopup, handleClose, id }) => {
                 Select a category
               </option>
               {hallRentCategory?.map((item) => (
+                <option key={item.id} value={item.id}>
+                  {item.name}
+                </option>
+              ))}
+            </select>
+          </div>
+          <div>
+            <label className="block text-sm font-medium text-gray-700">
+              Hall Rent
+            </label>
+            <select
+              id="hall_rent_id"
+              className="border rounded-lg px-3 py-2 focus:outline-none focus:ring-2 focus:ring-teal-500"
+              {...register("hall_rent_id", { required: true })}
+            >
+              <option value={NaN} disabled selected hidden>
+                Select a category
+              </option>
+              {hallRent?.map((item) => (
                 <option key={item.id} value={item.id}>
                   {item.name}
                 </option>
